@@ -16,24 +16,23 @@ public class HttpConnecter : MonoBehaviour
 {
     private static int unityWebRequestTimeout = 10;
     /*
-
-            StartCoroutine(Web.UnityWebSendRequest(
-                GlobalNetwork.Instance.web.,
-                HttpMethod.,
-                new Dictionary<string, string>()
-                {
-                },
-                (string data) =>
-                {
-                },
-                (string error) =>
-                {
-                },
-                (string state) =>
-                {
-                },
-                useTimeout: , 
-                dataEncodeEscape: ));
+        StartCoroutine(HttpConnecter.UnityWebSendRequest(
+            "",
+            HttpMethod.Post,
+            new Dictionary<string, string>()
+            {
+            },
+            (string data) =>
+            {
+            },
+            (string error) =>
+            {
+            },
+            (string state) =>
+            {
+            },
+            useTimeout: ,
+            dataEncodeEscape: ));
 
 
 
@@ -128,7 +127,7 @@ public class HttpConnecter : MonoBehaviour
     public static IEnumerator UnityWebSendRequest(
         string url,
         HttpMethod method,
-        Dictionary<string, string> data,
+        Dictionary<string, string> queryParams,
         Action<string> onSuccess,
         Action<string> onError,
         Action<string> stateEvent = null,
@@ -142,9 +141,9 @@ public class HttpConnecter : MonoBehaviour
             if (method == HttpMethod.Post)
             {
                 WWWForm form = new WWWForm();
-                if (data != null)
+                if (queryParams != null)
                 {
-                    foreach (var kvp in data)
+                    foreach (var kvp in queryParams)
                     {
                         form.AddField(kvp.Key, kvp.Value);
                     }
@@ -153,15 +152,15 @@ public class HttpConnecter : MonoBehaviour
             }
             else
             {
-                if (data != null)
+                if (queryParams != null)
                 {
                     if (dataEncodeEscape)
                     {
-                        url += "?" + string.Join("&", data.Select(pair => $"{UnityWebRequest.EscapeURL(pair.Key)}={UnityWebRequest.EscapeURL(pair.Value)}"));
+                        url += "?" + string.Join("&", queryParams.Select(pair => $"{UnityWebRequest.EscapeURL(pair.Key)}={UnityWebRequest.EscapeURL(pair.Value)}"));
                     }
                     else
                     {
-                        url += "?" + string.Join("&", data.Select(pair => $"{pair.Key}={pair.Value}"));
+                        url += "?" + string.Join("&", queryParams.Select(pair => $"{pair.Key}={pair.Value}"));
                     }
                 }
                 request = UnityWebRequest.Get(url);
